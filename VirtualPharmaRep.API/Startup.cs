@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using VirtualPharmaRep.API.DbContexts;
-using VirtualPharmaRep.API.Entities;
-using VirtualPharmaRep.API.Repositories;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using VirtualPharmaRep.Data.Entities;
+using VirtualPharmaRep.Database.DbContexts;
+using VirtualPharmaRep.Database.Seeders;
+using VirtualPharmaRep.Repositories;
 
 namespace VirtualPharmaRep.API
 {
@@ -31,28 +33,18 @@ namespace VirtualPharmaRep.API
 			services.AddControllers();
 
 			services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=VirtualPharmaRep;Integrated Security=True;MultipleActiveResultSets=True"));
-
-			services.AddScoped<ClinicRepository>();
-			services.AddScoped<DoctorEmploymentRepository>();
-			services.AddScoped<DoctorRepository>();
-			services.AddScoped<DrugPropertyRepository>();
-			services.AddScoped<DrugCategoryRepository>();
-			services.AddScoped<DrugPropertyReportRepository>();
-			services.AddScoped<DrugRepository>();
-			services.AddScoped<GradeRepository>();
-			services.AddScoped<TeamMemberRepository>();
-			services.AddScoped<TeamRepository>();
-			services.AddScoped<VisitRepository>();
+				options.UseSqlServer(
+					"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=VirtualPharmaRep;Integrated Security=True;MultipleActiveResultSets=True",
+					b => b.MigrationsAssembly("VirtualPharmaRep.Database")));
 
 			services.AddIdentity<ApplicationUser, IdentityRole>(
 					opts =>
 					{
-						opts.Password.RequireDigit = true;
+						opts.Password.RequireDigit = false;
 						opts.Password.RequireLowercase = true;
 						opts.Password.RequireUppercase = true;
-						opts.Password.RequireNonAlphanumeric = true;
-						opts.Password.RequiredLength = 9;
+						opts.Password.RequireNonAlphanumeric = false;
+						opts.Password.RequiredLength = 12;
 					})
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -80,7 +72,16 @@ namespace VirtualPharmaRep.API
 						ValidateAudience = true
 					};
 				});
-
+			services.AddScoped<ClinicRepository>();
+			services.AddScoped<DoctorEmploymentRepository>();
+			services.AddScoped<DoctorRepository>();
+			services.AddScoped<DrugCategoryRepository>();
+			services.AddScoped<DrugRepository>();
+			services.AddScoped<DrugPropertyReportRepository>();
+			services.AddScoped<GradeRepository>();
+			services.AddScoped<TeamMemberRepository>();
+			services.AddScoped<TeamRepository>();
+			services.AddScoped<VisitRepository>();
 
 			services.AddSwaggerGen(c =>
 			{
@@ -90,11 +91,19 @@ namespace VirtualPharmaRep.API
 					Title = "Moje API .NET Core",
 					Description = "Przykładowy opis"
 				});
+
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+				{
+					Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+					Name = "Authorization",
+					In = ParameterLocation.Header,
+					Type = SecuritySchemeType.ApiKey
+				});
 			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -105,16 +114,26 @@ namespace VirtualPharmaRep.API
 			app.UseSwaggerUI(c =>
 			{
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+				c.DocExpansion(DocExpansion.None);
 			});
 
 			app.UseRouting();
 
+            app.UseAuthentication();
+
 			app.UseAuthorization();
-			app.UseAuthentication();
-			app.UseEndpoints(endpoints =>
+
+            app.UseEndpoints(endpoints =>
 			{
 				endpoints.MapControllers();
 			});
+
+			using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+			var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+			var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+			var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+
+			DbSeeder.Seed(dbContext, roleManager, userManager);
 		}
 	}
 }

@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using VirtualPharmaRep.API.Entities;
-using VirtualPharmaRep.API.Repositories;
-using VirtualPharmaRep.API.ViewModels;
+using VirtualPharmaRep.Data.Entities;
+using VirtualPharmaRep.Data.ViewModels;
+using VirtualPharmaRep.Repositories;
 
 namespace VirtualPharmaRep.API.Controllers
 {
-	public class DoctorController : BaseApiController<DoctorViewModel,Doctor,DoctorRepository>
-	{
-		public DoctorController(DoctorRepository repository) : base(repository)
-		{
-		}
-	}
+	[Route("api/[controller]"), ApiController, Authorize]
+	public class DoctorController :BaseApiController<Doctor,DoctorRepository,DoctorViewModel>
+    {
+	    public DoctorController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
+		    IConfiguration configuration, DoctorRepository repository) : base(roleManager, userManager, configuration,
+		    repository)
+	    {
+	    }
+    }
 }

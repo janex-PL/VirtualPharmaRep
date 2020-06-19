@@ -1,13 +1,12 @@
-﻿using System;
-using VirtualPharmaRep.Data.Entities.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using VirtualPharmaRep.Data.ViewModels.Interfaces;
 
 namespace VirtualPharmaRep.Data.ViewModels
 {
-	public class DrugCategoryViewModel : IEntity
+	public class DrugCategoryViewModel : IViewModel
 	{
-		public int Id { get; set; }
-		public string Name { get; set; }
-		public DateTime CreatedDateTime { get; set; }
-		public DateTime LastModifiedDateTime { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
 	}
 }

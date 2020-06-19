@@ -1,0 +1,12 @@
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.deps.json
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.dll
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.csprojAssemblyReference.cache
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.AssemblyInfoInputs.cache
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.AssemblyInfo.cs
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.pdb
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Data.dll
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Data.pdb
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.csproj.CoreCompileInputs.cache
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.csproj.CopyComplete
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.dll
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Extensions\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Extensions.pdb

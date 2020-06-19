@@ -1,96 +1,176 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VirtualPharmaRep.Data.Entities;
+using VirtualPharmaRep.Data.Entities.Interfaces;
+using VirtualPharmaRep.Database.Audit;
 
 namespace VirtualPharmaRep.Database.DbContexts
 {
-	/// <summary>
-	/// Database context
-	/// </summary>
-	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
-	{
-		#region Database Sets
-		public DbSet<Token> Tokens { get; set; }
-		#endregion
+    /// <summary>
+    /// Database context
+    /// </summary>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-		#region Constructor
-		public ApplicationDbContext(DbContextOptions options) : base(options)
-		{ }
-		#endregion
+        #region Constructor
 
-		#region Database tables and entity relationships
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
-		{
-			base.OnModelCreating(modelBuilder);
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
+            : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
 
-			modelBuilder.Entity<Clinic>().ToTable("Clinics");
-			modelBuilder.Entity<Clinic>().HasMany(c => c.DoctorEmployments).WithOne(de => de.Clinic);
-			modelBuilder.Entity<Clinic>().Property(c => c.Id).ValueGeneratedOnAdd();
+        #endregion
 
-			modelBuilder.Entity<Doctor>().ToTable("Doctors");
-			modelBuilder.Entity<Doctor>().HasMany(d => d.DoctorEmployments).WithOne(de => de.Doctor);
-			modelBuilder.Entity<Doctor>().Property(d => d.Id).ValueGeneratedOnAdd();
+        #region Database tables and entity relationships
 
-			modelBuilder.Entity<DoctorEmployment>().ToTable("DoctorEmployments");
-			modelBuilder.Entity<DoctorEmployment>().HasOne(de => de.Doctor).WithMany(d => d.DoctorEmployments);
-			modelBuilder.Entity<DoctorEmployment>().HasOne(de => de.Clinic).WithMany(c => c.DoctorEmployments);
-			modelBuilder.Entity<DoctorEmployment>().Property(de => de.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<DoctorEmployment>().HasIndex(de => new { de.ClinicId, de.DoctorId }).IsUnique();
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-			modelBuilder.Entity<Drug>().ToTable("Drugs");
-			modelBuilder.Entity<Drug>().HasOne(d => d.DrugCategory).WithMany(dc => dc.Drugs);
-			modelBuilder.Entity<Drug>().HasMany(d => d.DrugProperties).WithOne(dp => dp.Drug);
-			modelBuilder.Entity<Drug>().Property(d => d.Id).ValueGeneratedOnAdd();
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
 
-			modelBuilder.Entity<DrugCategory>().ToTable("DrugCategories");
-			modelBuilder.Entity<DrugCategory>().HasMany(dc => dc.Drugs).WithOne(d => d.DrugCategory);
-			modelBuilder.Entity<DrugCategory>().Property(dc => dc.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<DrugCategory>().HasIndex(dc => dc.Name).IsUnique();
+        #endregion
 
-			modelBuilder.Entity<DrugProperty>().ToTable("DrugProperties");
-			modelBuilder.Entity<DrugProperty>().HasOne(dp => dp.Drug).WithMany(d => d.DrugProperties);
-			modelBuilder.Entity<DrugProperty>().HasMany(dp => dp.DrugPropertyReports).WithOne(dpr => dpr.DrugProperty);
-			modelBuilder.Entity<DrugProperty>().Property(dp => dp.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<DrugProperty>().HasIndex(dp => new { dp.DrugId, dp.Title }).IsUnique();
+        public async Task<bool> IsForeignKeyValid<T>(object id) where T : class
+        {
+            return typeof(T) == typeof(ApplicationUser)
+                ? await Set<T>().FindAsync((string)id) != null
+                : await Set<T>().FindAsync((int)id) != null;
 
-			modelBuilder.Entity<DrugPropertyReport>().ToTable("DrugPropertyReports");
-			modelBuilder.Entity<DrugPropertyReport>().HasOne(dpr => dpr.Grade).WithMany(g => g.DrugPropertyReports);
-			modelBuilder.Entity<DrugPropertyReport>().HasOne(dpr => dpr.DrugProperty).WithMany(dp => dp.DrugPropertyReports);
-			modelBuilder.Entity<DrugPropertyReport>().HasOne(dpr => dpr.Visit).WithMany(v => v.DrugPropertyReports);
-			modelBuilder.Entity<DrugPropertyReport>().Property(dpr => dpr.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<DrugPropertyReport>().HasIndex(dpr => new { dpr.DrugPropertyId, dpr.VisitId }).IsUnique();
+        }
 
-			modelBuilder.Entity<Grade>().ToTable("Grades");
-			modelBuilder.Entity<Grade>().HasMany(g => g.DrugPropertyReports).WithOne(dpr => dpr.Grade);
-			modelBuilder.Entity<Grade>().Property(g => g.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<Grade>().HasIndex(g => g.Title).IsUnique();
+        public async Task<int> SaveChangesAsyncNoAudit()
+        {
+            ChangeTracker.DetectChanges();
+            SoftDeleteEntities(ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted));
+            return await SaveChangesAsync();
+        }
 
-			modelBuilder.Entity<Team>().ToTable("Teams");
-			modelBuilder.Entity<Team>().HasMany(t => t.TeamMembers).WithOne(tm => tm.Team);
-			modelBuilder.Entity<Team>().Property(t => t.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<Team>().HasIndex(t => t.Name).IsUnique();
+        public async Task<int> SaveChangesAsyncWithAudit(string userId)
+        {
+            var auditEntries = await OnBeforeSaveChanges(userId);
+            var result = await SaveChangesAsync();
+            await OnAfterSaveChanges(auditEntries);
+            return result;
+        }
 
-			modelBuilder.Entity<TeamMember>().ToTable("TeamMembers");
-			modelBuilder.Entity<TeamMember>().HasOne(tm => tm.User).WithMany(u => u.TeamMembers);
-			modelBuilder.Entity<TeamMember>().HasOne(tm => tm.Team).WithMany(t => t.TeamMembers);
-			modelBuilder.Entity<TeamMember>().Property(tm => tm.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<TeamMember>().HasIndex(tm => new { tm.UserId, tm.TeamId }).IsUnique();
+        private async Task<List<AuditEntry>> OnBeforeSaveChanges(string userId)
+        {
+            ChangeTracker.DetectChanges();
+            
+            var markedAsDeleted = ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted);
+            SoftDeleteEntities(markedAsDeleted);
+            var auditEntries = new List<AuditEntry>();
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is AuditEntity || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                    continue;
 
-			modelBuilder.Entity<Token>().ToTable("Tokens");
-			modelBuilder.Entity<Token>().Property(i => i.Id).ValueGeneratedOnAdd();
-			modelBuilder.Entity<Token>().HasOne(t => t.User).WithMany(u => u.Tokens);
+                var auditEntry = new AuditEntry(entry) {TableName = entry.Metadata.GetTableName()};
+                auditEntries.Add(auditEntry);
 
-			modelBuilder.Entity<ApplicationUser>().ToTable("Users");
-			modelBuilder.Entity<ApplicationUser>().HasMany(u => u.Visits).WithOne(v => v.User);		
-			modelBuilder.Entity<ApplicationUser>().HasMany(u => u.TeamMembers).WithOne(tm => tm.User);
-			modelBuilder.Entity<ApplicationUser>().HasMany(u => u.Tokens).WithOne(t => t.User);
+                foreach (var property in entry.Properties)
+                {
+                    if (property.IsTemporary)
+                    {
+                        // value will be generated by the database, get the value after saving
+                        auditEntry.TemporaryProperties.Add(property);
+                        continue;
+                    }
 
-			modelBuilder.Entity<Visit>().ToTable("Visits");
-			modelBuilder.Entity<Visit>().HasOne(v => v.DoctorEmployment).WithMany(de => de.Visits);
-			modelBuilder.Entity<Visit>().HasOne(v => v.User).WithMany(u => u.Visits);
-			modelBuilder.Entity<Visit>().HasMany(v => v.DrugPropertyReports).WithOne(dpr => dpr.Visit);
-			modelBuilder.Entity<Visit>().Property(v => v.Id).ValueGeneratedOnAdd();
-		}
-		#endregion
-	}
+                    var propertyName = property.Metadata.Name;
+                    if (property.Metadata.IsPrimaryKey())
+                    {
+                        auditEntry.KeyValues[propertyName] = property.CurrentValue;
+                        continue;
+                    }
+
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            auditEntry.NewValues[propertyName] = property.CurrentValue;
+                            break;
+
+                        case EntityState.Deleted:
+                            auditEntry.OldValues[propertyName] = property.OriginalValue;
+                            break;
+
+                        case EntityState.Modified:
+                            if (property.OriginalValue == null && property.CurrentValue == null)
+                                continue;
+
+                            if (property.OriginalValue == null ||
+                                property.CurrentValue == null ||
+                                !property.OriginalValue.Equals(property.CurrentValue))
+                            {
+                                entry.OriginalValues.SetValues(await entry.GetDatabaseValuesAsync());
+                                auditEntry.OldValues[propertyName] = property.OriginalValue;
+                                auditEntry.NewValues[propertyName] = property.CurrentValue;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            // Save audit entities that have all the modifications
+            foreach (var auditEntry in auditEntries.Where(_ => !_.HasTemporaryProperties))
+            {
+                auditEntry.UserId = userId;
+                await Set<AuditEntity>().AddAsync(auditEntry.ToAudit());
+            }
+
+            // keep a list of entries where the value of some properties are unknown at this step
+            return auditEntries.Where(_ => _.HasTemporaryProperties).ToList();
+        }
+
+        private Task OnAfterSaveChanges(IReadOnlyCollection<AuditEntry> auditEntries)
+        {
+            if (auditEntries == null || auditEntries.Count == 0)
+                return Task.CompletedTask;
+
+            foreach (var auditEntry in auditEntries)
+            {
+                // Get the final value of the temporary properties
+                foreach (var prop in auditEntry.TemporaryProperties)
+                {
+                    if (prop.Metadata.IsPrimaryKey())
+                    {
+                        auditEntry.KeyValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                    else
+                    {
+                        auditEntry.NewValues[prop.Metadata.Name] = prop.CurrentValue;
+                    }
+                }
+
+                if (_httpContextAccessor?.HttpContext != null)
+                    auditEntry.UserId =
+                        _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                // Save the Audit entry
+                Set<AuditEntity>().Add(auditEntry.ToAudit());
+            }
+
+            return SaveChangesAsync();
+        }
+
+        private static void SoftDeleteEntities(IEnumerable<EntityEntry> markedAsDeleted)
+        {
+            foreach (var entry in markedAsDeleted)
+            {
+                if (!(entry.Entity is ISoftDeletable entity)) continue;
+                entry.State = EntityState.Unchanged;
+                entity.IsDeleted = true;
+            }
+        }
+    }
 }

@@ -1,50 +1,41 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mapster;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using VirtualPharmaRep.Data.CustomObjects;
+using VirtualPharmaRep.API.BaseControllers;
+using VirtualPharmaRep.Data.Dtos;
 using VirtualPharmaRep.Data.Entities;
+using VirtualPharmaRep.Data.Pagination;
 using VirtualPharmaRep.Data.ViewModels;
-using VirtualPharmaRep.Repositories;
+using VirtualPharmaRep.Database.EntityValidators;
+using VirtualPharmaRep.Extensions;
+using VirtualPharmaRep.Services.CrudServices;
+using VirtualPharmaRep.Services.SecurityServices;
 
 namespace VirtualPharmaRep.API.Controllers
 {
-	[Route("api/[controller]"), ApiController, Authorize]
-	public class DoctorEmploymentController : BaseApiController<DoctorEmployment,DoctorEmploymentRepository,DoctorEmploymentViewModel>
+    [Route("api/[controller]"), ApiController, Authorize]
+    public class DoctorEmploymentController : BaseApiCrudController<DoctorEmployment, DoctorEmploymentViewModel,
+        DoctorEmploymentDto, DoctorEmploymentEntityValidator, DoctorEmploymentCrudService>
     {
-	    public DoctorEmploymentController(RoleManager<IdentityRole> roleManager,
-	        UserManager<ApplicationUser> userManager, IConfiguration configuration,
-	        DoctorEmploymentRepository repository) : base(roleManager, userManager, configuration, repository)
+        public DoctorEmploymentController(DoctorEmploymentCrudService crudService, IPermissionResolverService permissionResolverService) : base(crudService, permissionResolverService)
         {
         }
 
-	    public override async Task<EntityValidationResult> PerformValidationChecks(DoctorEmployment entity)
-	    {
-		    if (!await Repository.IsForeignKeyValid<Doctor>(entity.DoctorId))
-			    return new EntityValidationResult(false, $"Couldn't find Doctor with id: {entity.DoctorId}");
+        [HttpGet("ByDoctor/{doctorId}")]
+        public async Task<ActionResult<IList<DoctorEmploymentDto>>> GetByDoctor(int doctorId, [FromQuery] PagedRequest request)
+        {
+            var response = await CrudService.GetByDoctor(doctorId, request);
+            Response.Headers.AddPaginationHeaders(response);
+            return Ok(response.Result);
+        }
 
-		    if (!await Repository.IsForeignKeyValid<Clinic>(entity.ClinicId))
-			    return new EntityValidationResult(false, $"Couldn't find Clinic with id: {entity.ClinicId}");
-
-		    return  new EntityValidationResult(true, string.Empty);
-	    }
-
-	    [HttpGet("ByDoctor/{doctorId}")]
-	    public async Task<IActionResult> GetByDoctor(int doctorId)
-	    {
-		    var results = await Repository.GetByDoctor(doctorId);
-
-			return new JsonResult(results.Adapt<List<DoctorEmploymentViewModel>>(), JsonSerializerOptions);
-	    }
-	    [HttpGet("ByClinic/{clinicId}")]
-	    public async Task<IActionResult> GetByClinic(int clinicId)
-	    {
-		    var results = await Repository.GetByDoctor(clinicId);
-
-		    return new JsonResult(results.Adapt<List<DoctorEmploymentViewModel>>(), JsonSerializerOptions);
-	    }
-	}
+        [HttpGet("ByClinic/{clinicId}")]
+        public async Task<ActionResult<IList<DoctorEmploymentDto>>> GetByClinic(int clinicId, [FromQuery] PagedRequest request)
+        {
+            var response = await CrudService.GetByClinic(clinicId, request);
+            Response.Headers.AddPaginationHeaders(response);
+            return Ok(response.Result);
+        }
+    }
 }

@@ -1,22 +1,18 @@
-﻿using System;
-using VirtualPharmaRep.Data.Entities.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using VirtualPharmaRep.Data.ViewModels.Interfaces;
 
 namespace VirtualPharmaRep.Data.ViewModels
 {
-    public class DoctorEmploymentViewModel : IEntity
+    public class DoctorEmploymentViewModel : IViewModel
     {
-        public int Id { get; set; }
-
-        public DateTime CreatedDateTime { get; set; }
-
-        public DateTime LastModifiedDateTime { get; set; }
-
+		[Required]
         public int DoctorId { get; set; }
-
+        [Required]
         public int ClinicId { get; set; }
-
-        public bool IsCurrentJob { get; set; }
-
+        [Required]
+        [MaxLength(50)]
         public string JobTitle { get; set; }
+        [Required]
+        public bool IsJobActive { get; set; }
 	}
 }

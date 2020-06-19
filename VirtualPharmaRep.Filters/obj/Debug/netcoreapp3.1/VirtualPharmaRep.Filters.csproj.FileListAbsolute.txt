@@ -1,0 +1,5 @@
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Filters\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Filters.deps.json
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Filters\bin\Debug\netcoreapp3.1\VirtualPharmaRep.Filters.dll
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Filters\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Filters.csprojAssemblyReference.cache
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Filters\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Filters.AssemblyInfoInputs.cache
+C:\Users\jan.kliszcz\Desktop\VirtualPharmaRep\VirtualPharmaRep.Filters\obj\Debug\netcoreapp3.1\VirtualPharmaRep.Filters.AssemblyInfo.cs

@@ -1,26 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
+using VirtualPharmaRep.API.BaseControllers;
+using VirtualPharmaRep.Data.Dtos;
 using VirtualPharmaRep.Data.Entities;
 using VirtualPharmaRep.Data.ViewModels;
-using VirtualPharmaRep.Repositories;
+using VirtualPharmaRep.Database.EntityValidators;
+using VirtualPharmaRep.Services.CrudServices;
+using VirtualPharmaRep.Services.SecurityServices;
 
 namespace VirtualPharmaRep.API.Controllers
 {
 
-	[Route("api/[controller]"), ApiController, Authorize]
-	public class ClinicController : BaseApiController<Clinic,ClinicRepository,ClinicViewModel>
+	[Route("api/[controller]"), ApiController]
+	public class ClinicController : BaseApiCrudController<Clinic, ClinicViewModel, ClinicDto, 
+        ClinicEntityValidator, ClinicCrudService>
 	{
-		#region Constructor
-
-		public ClinicController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager,
-			IConfiguration configuration, ClinicRepository repository) : base(roleManager, userManager, configuration,
-			repository)
-		{
-		}
-
-		#endregion
-
-	}
+        public ClinicController(ClinicCrudService crudService, IPermissionResolverService permissionResolverService) : base(crudService, permissionResolverService)
+        {
+        }
+    }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,11 +7,53 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200412084946_Initial.cs" />
     <Compile Remove="Migrations\20200412084946_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200416124133_inita.cs" />
+    <Compile Remove="Migrations\20200416124133_inita.Designer.cs" />
+    <Compile Remove="Migrations\20200423210441_Iniial.cs" />
+    <Compile Remove="Migrations\20200423210441_Iniial.Designer.cs" />
+    <Compile Remove="Migrations\20200518124738_Initial.cs" />
+    <Compile Remove="Migrations\20200518124738_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200518125536_Initial.cs" />
+    <Compile Remove="Migrations\20200518125536_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200518125634_Initia.cs" />
+    <Compile Remove="Migrations\20200518125634_Initia.Designer.cs" />
+    <Compile Remove="Migrations\20200518125656_Initial.cs" />
+    <Compile Remove="Migrations\20200518125656_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200524182217_Initial.cs" />
+    <Compile Remove="Migrations\20200524182217_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200524182812_Initial.cs" />
+    <Compile Remove="Migrations\20200524182812_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200603131139_Audit.cs" />
+    <Compile Remove="Migrations\20200603131139_Audit.Designer.cs" />
+    <Compile Remove="Migrations\20200603133203_Remove-Dates.cs" />
+    <Compile Remove="Migrations\20200603133203_Remove-Dates.Designer.cs" />
+    <Compile Remove="Migrations\20200603144100_Initial.cs" />
+    <Compile Remove="Migrations\20200603144100_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200603144355_Initia.cs" />
+    <Compile Remove="Migrations\20200603144355_Initia.Designer.cs" />
+    <Compile Remove="Migrations\20200603144419_Initial.cs" />
+    <Compile Remove="Migrations\20200603144419_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200603145955_Initial.cs" />
+    <Compile Remove="Migrations\20200603145955_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200603190748_softDelete.cs" />
+    <Compile Remove="Migrations\20200603190748_softDelete.Designer.cs" />
+    <Compile Remove="Migrations\20200603191104_Initial.cs" />
+    <Compile Remove="Migrations\20200603191104_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200603191442_x.cs" />
+    <Compile Remove="Migrations\20200603191442_x.Designer.cs" />
+    <Compile Remove="Migrations\20200603191541_Initial.cs" />
+    <Compile Remove="Migrations\20200603191541_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200608093305_Initial.cs" />
+    <Compile Remove="Migrations\20200608093305_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200608093422_Initial.cs" />
+    <Compile Remove="Migrations\20200608093422_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200609082143_Initial.cs" />
+    <Compile Remove="Migrations\20200609082143_Initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>

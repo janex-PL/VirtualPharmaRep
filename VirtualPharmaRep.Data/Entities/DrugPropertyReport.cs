@@ -1,39 +1,35 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using VirtualPharmaRep.Data.Entities.Interfaces;
 
 namespace VirtualPharmaRep.Data.Entities
 {
-	public class DrugPropertyReport : IEntity
+	public class DrugPropertyReport : IEntity, ISoftDeletable, IPrivateResource
 	{
 		[Key]
 		public int Id { get; set; }
-
+        [Required]
+        public string CreatedBy { get; set; }
 		[Required]
-		public DateTime CreatedDateTime { get; set; }
-
+		[DefaultValue(false)]
+        public bool IsPublished { get; set; }
 		[Required]
-		public DateTime LastModifiedDateTime { get; set; }
-
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
 		[Required]
-		public int GradeId { get; set; }
-
+		public int DrugReportId { get; set; }
 		[Required]
 		public int DrugPropertyId { get; set; }
-
+        public string Description { get; set; }
 		[Required]
-		public int VisitId { get; set; }
-
-		public string Description { get; set; }
-
-		[ForeignKey("GradeId")]
-		public virtual Grade Grade { get; set; }
-
-		[ForeignKey("DrugPropertyId")]
+		public Grade Grade { get; set; }
+        [ForeignKey("DrugPropertyId")]
 		public virtual DrugProperty DrugProperty { get; set; }
+    }
 
-		[ForeignKey("VisitId")]
-		public virtual Visit Visit { get; set; }
-	}
+    public enum Grade
+    {
+		Negative,Neutral,Positive
+    }
 }

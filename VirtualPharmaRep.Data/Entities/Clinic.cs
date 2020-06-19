@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using VirtualPharmaRep.Data.Entities.Interfaces;
 
 namespace VirtualPharmaRep.Data.Entities
 {
-	public class Clinic : IEntity
+	public class Clinic : IEntity, ISoftDeletable
 	{
 		[Key]
 		public int Id { get; set; }
-
 		[Required]
-		public string Name { get; set; }
-
+        public string CreatedBy { get; set; }
+        [Required]
+        [DefaultValue(false)]
+        public bool IsDeleted { get; set; }
 		[Required]
-		public string Address { get; set; }
-
+		[MaxLength(200)]
+        public string Name { get; set; }
 		[Required]
+		[MaxLength(100)]
+        public string Address { get; set; }
+		[Required]
+		[MaxLength(10)]
 		public string PostalCode { get; set; }
-
 		[Required]
+		[MaxLength(50)]
 		public string City { get; set; }
-
 		[Required]
+		[MaxLength(50)]
 		public string Province { get; set; }
-
-		[Required]
-		public DateTime CreatedDateTime { get; set; }
-
-		[Required]
-		public DateTime LastModifiedDateTime { get; set; }
-
-		public virtual List<DoctorEmployment> DoctorEmployments { get; set; }
-	}
+        public virtual List<DoctorEmployment> DoctorEmployments { get; set; }
+    }
 }

@@ -24,9 +24,6 @@ namespace VirtualPharmaRep.API.Swagger
                 case "Get" when controllerActionDescriptor.Parameters.Count == 1:
                     GetSummary.Apply(ref operation, resourceName);
                     break;
-                case "Post" when controllerActionDescriptor.AttributeRouteInfo.Template.Contains("Range"):
-                    PostRangeSummary.Apply(ref operation, resourceName);
-                    break;
                 case "Post":
                     PostSummary.Apply(ref operation, resourceName);
                     break;

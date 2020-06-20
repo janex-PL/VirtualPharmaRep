@@ -76,18 +76,6 @@ namespace VirtualPharmaRep.API.BaseControllers
             };
         }
 
-        [HttpPost("Range")]
-        [ValidateModel]
-        public async Task<ActionResult<TDto>> Post([FromBody] IList<TViewModel> models)
-        {
-            var result = await CrudService.AddRange(models, PermissionResolverResult);
-            return result switch
-            {
-                null => Conflict(),
-                _ => Created($"api/{typeof(TEntity).Name}/", result)
-            };
-        }
-
         [HttpPatch("{id}")]
         [ValidateModel]
         public async Task<ActionResult<TDto>> Put([FromRoute] int id, [FromBody] TViewModel model)

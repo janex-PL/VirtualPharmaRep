@@ -33,7 +33,7 @@ namespace VirtualPharmaRep.Services.CrudServices
 
         public async Task<PagedListResponse<TDto>> Get(PagedRequest request, PermissionResolverResult permissionResult)
         {
-            var resultList = await Context.Set<TEntity>().ToListAsync();
+            var resultList = await Context.Set<TEntity>().AsNoTracking().ToListAsync();
 
             if (permissionResult.AccessLevel == AccessLevel.Private)
                 resultList = resultList.Where(e => e.CreatedBy == permissionResult.UserId).ToList();
@@ -46,7 +46,7 @@ namespace VirtualPharmaRep.Services.CrudServices
 
         public async Task<TDto> Get(int id, PermissionResolverResult permissionResult)
         {
-            var result = await Context.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
+            var result = await Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
 
             if (permissionResult.AccessLevel == AccessLevel.Private && result.CreatedBy != permissionResult.UserId)
                 return null;

@@ -20,7 +20,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<DrugDto>> GetByCategory(int categoryId, PagedRequest request)
         {
             return Mapper.Map<PagedListResponse<DrugDto>>(new PagedListResponse<Drug>(
-                await Context.Set<Drug>().Where(d => d.DrugCategoryId == categoryId).ToListAsync(),
+                await Context.Set<Drug>().Where(d => d.DrugCategoryId == categoryId).AsNoTracking().ToListAsync(),
                 request.PageSize, request.PageNumber));
         }
     }

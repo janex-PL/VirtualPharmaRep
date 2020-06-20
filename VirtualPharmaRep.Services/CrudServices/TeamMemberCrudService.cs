@@ -21,7 +21,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<TeamMemberDto>> GetByTeam(int teamId, PagedRequest request)
         {
             return Mapper.Map<PagedListResponse<TeamMemberDto>>(new PagedListResponse<TeamMember>(
-                await Context.Set<TeamMember>().Where(tm => tm.TeamId == teamId).ToListAsync(), request.PageSize,
+                await Context.Set<TeamMember>().Where(tm => tm.TeamId == teamId).AsNoTracking().ToListAsync(), request.PageSize,
                 request.PageNumber));
         }
     }

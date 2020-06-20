@@ -22,14 +22,14 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<DoctorEmploymentDto>> GetByDoctor(int doctorId, PagedRequest request)
         {
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(new PagedListResponse<DoctorEmployment>(
-                await Context.Set<DoctorEmployment>().Where(de => de.DoctorId == doctorId).ToListAsync(),
+                await Context.Set<DoctorEmployment>().Where(de => de.DoctorId == doctorId).AsNoTracking().ToListAsync(),
                 request.PageSize, request.PageNumber));
         }
 
         public async Task<PagedListResponse<DoctorEmploymentDto>> GetByClinic(int clinicId, PagedRequest request)
         {
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(new PagedListResponse<DoctorEmployment>(
-                await Context.Set<DoctorEmployment>().Where(de => de.ClinicId == clinicId).ToListAsync(),
+                await Context.Set<DoctorEmployment>().Where(de => de.ClinicId == clinicId).AsNoTracking().ToListAsync(),
                 request.PageSize, request.PageNumber));
         }
     }

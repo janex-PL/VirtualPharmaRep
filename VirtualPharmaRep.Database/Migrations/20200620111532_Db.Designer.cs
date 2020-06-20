@@ -10,14 +10,14 @@ using VirtualPharmaRep.Database.DbContexts;
 namespace VirtualPharmaRep.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200617115055_Initial")]
-    partial class Initial
+    [Migration("20200620111532_Db")]
+    partial class Db
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 

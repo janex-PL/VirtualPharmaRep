@@ -20,6 +20,22 @@ namespace VirtualPharmaRep.Database.DbContexts
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+        #region DbSets
+
+        public DbSet<Clinic> Clinics { get; set; }
+        public DbSet<Doctor> Doctors { get; set; }
+        public DbSet<DoctorEmployment> DoctorEmployments { get; set; }
+        public DbSet<DrugCategory> DrugCategories { get; set; }
+        public DbSet<Drug> Drugs { get; set; }
+        public DbSet<DrugProperty> DrugProperties { get; set; }
+        public DbSet<DrugPropertyReport> DrugPropertyReports { get; set; }
+        public DbSet<DrugReport> DrugReports { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<Visit> Visits { get; set; }
+
+        #endregion
+
         #region Constructor
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)

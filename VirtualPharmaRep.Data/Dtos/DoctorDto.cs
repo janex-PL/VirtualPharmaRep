@@ -1,4 +1,5 @@
-﻿using VirtualPharmaRep.Data.Dtos.Interfaces;
+﻿using System.Collections.Generic;
+using VirtualPharmaRep.Data.Dtos.Interfaces;
 
 namespace VirtualPharmaRep.Data.Dtos
 {
@@ -8,5 +9,6 @@ namespace VirtualPharmaRep.Data.Dtos
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Title { get; set; }
+        public IEnumerable<DoctorEmploymentDto> DoctorEmployments { get; set; }
     }
 }

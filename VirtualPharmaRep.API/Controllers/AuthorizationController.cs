@@ -5,25 +5,30 @@ using VirtualPharmaRep.Services.SecurityServices;
 
 namespace VirtualPharmaRep.API.Controllers
 {
-	[Route("api/[controller]"), ApiController]
-	public class TokenController : ControllerBase
+	[Route("api/auth"), ApiController]
+	public class AuthorizationController : ControllerBase
     {
+        #region Services
         private readonly ITokenService _service;
+        #endregion
 
-        public TokenController(ITokenService service)
+        #region Constructor
+        public AuthorizationController(ITokenService service)
         {
             _service = service;
         }
+        #endregion
 
+        #region Endpoints
         [HttpPost("Auth")]
-		public async Task<ActionResult<TokenResponseViewModel>> Auth([FromBody] TokenRequestViewModel model)
-		{
-			if(model?.GrantType == null)
-				return BadRequest();
+        public async Task<ActionResult<TokenResponseViewModel>> Auth([FromBody] TokenRequestViewModel model)
+        {
+            if (model?.GrantType == null)
+                return BadRequest();
             TokenResponseViewModel response;
             switch (model.GrantType)
             {
-				case "password":
+                case "password":
                     response = await _service.GetToken(model);
                     break;
                 case "refresh_token":
@@ -33,7 +38,8 @@ namespace VirtualPharmaRep.API.Controllers
                     return BadRequest();
             }
 
-            return response ?? (ActionResult<TokenResponseViewModel>) Unauthorized();
+            return response ?? (ActionResult<TokenResponseViewModel>)Unauthorized();
         }
+        #endregion
     }
 }

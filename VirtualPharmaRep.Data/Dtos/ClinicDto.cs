@@ -1,4 +1,5 @@
-﻿using VirtualPharmaRep.Data.Dtos.Interfaces;
+﻿using System.Collections.Generic;
+using VirtualPharmaRep.Data.Dtos.Interfaces;
 
 namespace VirtualPharmaRep.Data.Dtos 
 {
@@ -10,5 +11,6 @@ namespace VirtualPharmaRep.Data.Dtos
         public string PostalCode { get; set; }
         public string City { get; set; }
         public string Province { get; set; }
+        public IEnumerable<DoctorEmploymentDto> DoctorEmployments { get; set; }
     }
 }

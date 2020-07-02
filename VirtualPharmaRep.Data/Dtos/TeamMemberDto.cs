@@ -6,7 +6,7 @@ namespace VirtualPharmaRep.Data.Dtos
 	{
         public int Id { get; set; }
         public string UserId { get; set; }
-        public int TeamId { get; set; }
         public bool IsLeader { get; set; }
+        public TeamDto Team { get; set; }
     }
 }

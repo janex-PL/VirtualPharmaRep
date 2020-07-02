@@ -10,6 +10,7 @@ namespace VirtualPharmaRep.Data.Dtos
         public int DrugPropertyId { get; set; }
         public string Description { get; set; }
         public Grade Grade { get; set; }
+        public DrugReportDto DrugReport { get; set; }
+        public DrugPropertyDto DrugProperty { get; set; }
     }
-
 }

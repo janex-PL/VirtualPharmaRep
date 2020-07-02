@@ -26,6 +26,8 @@ namespace VirtualPharmaRep.Data.Entities
 		public Grade Grade { get; set; }
         [ForeignKey("DrugPropertyId")]
 		public virtual DrugProperty DrugProperty { get; set; }
+		[ForeignKey("DrugReportId")]
+		public virtual DrugReport DrugReport { get; set; }
     }
 
     public enum Grade

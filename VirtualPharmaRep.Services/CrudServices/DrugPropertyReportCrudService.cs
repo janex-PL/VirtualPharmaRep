@@ -22,7 +22,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<DrugPropertyReportDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.DrugPropertyReports.AsNoTracking().Include(dpr => dpr.DrugProperty)
+            var resultList = await Context.DrugPropertyReports.Include(dpr => dpr.DrugProperty)
                 .ThenInclude(dp => dp.Drug).Include(dpr => dpr.DrugReport).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugPropertyReportDto>>(
@@ -30,7 +30,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DrugPropertyReportDto> Get(int id)
         {
-            var result = await Context.DrugPropertyReports.AsNoTracking().Include(dpr => dpr.DrugProperty)
+            var result = await Context.DrugPropertyReports.Include(dpr => dpr.DrugProperty)
                 .ThenInclude(dp => dp.Drug).Include(dpr => dpr.DrugReport).FirstOrDefaultAsync(dpr => dpr.Id == id);
 
             return Mapper.Map<DrugPropertyReportDto>(result);
@@ -59,7 +59,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DrugPropertyReportDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.DrugPropertyReports.AsNoTracking().FirstOrDefaultAsync(dpr => dpr.Id == id);
+            var entity = await Context.DrugPropertyReports.FirstOrDefaultAsync(dpr => dpr.Id == id);
 
             if (entity == null)
                 return null;
@@ -72,7 +72,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<DrugPropertyReportDto>> GetByDrugReport(int drugReportId, PagedRequest request)
         {
             var resultList = await Context.DrugPropertyReports.Where(dpr => dpr.DrugReportId == drugReportId)
-                .AsNoTracking().Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
+                .Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugPropertyReportDto>>(
                 new PagedListResponse<DrugPropertyReport>(resultList, request.PageSize, request.PageNumber));
@@ -80,7 +80,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<DrugPropertyReportDto>> GetByProperty(int propertyId, PagedRequest request)
         {
             var resultList = await Context.DrugPropertyReports.Where(dpr => dpr.DrugPropertyId == propertyId)
-                .AsNoTracking().Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
+                .Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugPropertyReportDto>>(
                 new PagedListResponse<DrugPropertyReport>(resultList, request.PageSize, request.PageNumber));
@@ -88,7 +88,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<DrugPropertyReportDto>> GetTrash(PagedRequest request)
         {
             var resultList = await Context.DrugPropertyReports.IgnoreQueryFilters().Where(dpr => dpr.IsDeleted)
-                .AsNoTracking().Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
+                .Include(dpr => dpr.DrugProperty).Include(dpr => dpr.DrugReport).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugPropertyReportDto>>(
                 new PagedListResponse<DrugPropertyReport>(resultList, request.PageSize, request.PageNumber));

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Text;
 using AutoMapper;
@@ -12,7 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using VirtualPharmaRep.API.Configuration;
 using VirtualPharmaRep.API.Filters;
 using VirtualPharmaRep.API.Middleware;
@@ -32,11 +31,15 @@ namespace VirtualPharmaRep.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddResponseCompression();
-            services.AddControllers(config => config.Filters.Add(typeof(ExceptionFilter)))
-                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            services.AddControllersWithViews(config => config.Filters.Add(typeof(ExceptionFilter)))
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            services.AddRazorPages();
             services.AddCors();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -45,9 +48,7 @@ namespace VirtualPharmaRep.API
                 options.ForwardedForHeaderName = "X-Forwarded-For-My-Custom-Header-Name";
             });
             services.AddMemoryCache();
-
             services.AddSwagger().AddDatabase().AddIdentity().AddEntityValidators().AddServices();
-
             services.AddAuthentication(opts =>
                 {
                     opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,14 +78,19 @@ namespace VirtualPharmaRep.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ApplicationDbContext context)
         {
-            app.UseResponseCompression();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseWebAssemblyDebugging();
             }
-
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -92,9 +98,10 @@ namespace VirtualPharmaRep.API
             });
 
             app.UseHttpsRedirection();
+            app.UseBlazorFrameworkFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -103,9 +110,12 @@ namespace VirtualPharmaRep.API
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware(typeof(ExecutionTimeMeasureMiddleware));
+
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
             });
 
             context.Database.Migrate();

@@ -22,14 +22,14 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<DrugCategoryDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.DrugCategories.AsNoTracking().Include(dc => dc.Drugs).ToListAsync();
+            var resultList = await Context.DrugCategories.Include(dc => dc.Drugs).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugCategoryDto>>(
                 new PagedListResponse<DrugCategory>(resultList, request.PageSize, request.PageNumber));
         }
         public async Task<DrugCategoryDto> Get(int id)
         {
-            var result = await Context.DrugCategories.AsNoTracking().Include(dc => dc.Drugs)
+            var result = await Context.DrugCategories.Include(dc => dc.Drugs)
                 .FirstOrDefaultAsync(dc => dc.Id == id);
 
             return Mapper.Map<DrugCategoryDto>(result);
@@ -58,7 +58,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DrugCategoryDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.DrugCategories.AsNoTracking().FirstOrDefaultAsync(dc => dc.Id == id);
+            var entity = await Context.DrugCategories.FirstOrDefaultAsync(dc => dc.Id == id);
 
             if (entity == null)
                 return null;
@@ -70,7 +70,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DrugCategoryDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.DrugCategories.AsNoTracking().IgnoreQueryFilters().Where(dc => dc.IsDeleted).Include(dc => dc.Drugs).ToListAsync();
+            var resultList = await Context.DrugCategories.IgnoreQueryFilters().Where(dc => dc.IsDeleted).Include(dc => dc.Drugs).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugCategoryDto>>(
                 new PagedListResponse<DrugCategory>(resultList, request.PageSize, request.PageNumber));

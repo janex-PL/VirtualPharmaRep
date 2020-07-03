@@ -22,7 +22,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<DoctorEmploymentDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.DoctorEmployments.AsNoTracking().Include(de => de.Doctor)
+            var resultList = await Context.DoctorEmployments.Include(de => de.Doctor)
                 .Include(de => de.Clinic).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(
@@ -30,7 +30,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DoctorEmploymentDto> Get(int id)
         {
-            var result = await Context.DoctorEmployments.AsNoTracking().Include(de => de.Doctor)
+            var result = await Context.DoctorEmployments.Include(de => de.Doctor)
                 .Include(de => de.Clinic).FirstOrDefaultAsync(de => de.Id == id);
 
             return Mapper.Map<DoctorEmploymentDto>(result);
@@ -59,7 +59,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DoctorEmploymentDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.DoctorEmployments.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            var entity = await Context.DoctorEmployments.FirstOrDefaultAsync(c => c.Id == id);
 
             if (entity == null)
                 return null;
@@ -71,7 +71,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DoctorEmploymentDto>> GetByDoctor(int doctorId, PagedRequest request)
         {
-            var resultList = await Context.DoctorEmployments.AsNoTracking().Where(de => de.DoctorId == doctorId)
+            var resultList = await Context.DoctorEmployments.Where(de => de.DoctorId == doctorId)
                 .Include(de => de.Doctor).Include(de => de.Clinic).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(
@@ -79,7 +79,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DoctorEmploymentDto>> GetByClinic(int clinicId, PagedRequest request)
         {
-            var resultList = await Context.DoctorEmployments.AsNoTracking().Where(de => de.ClinicId == clinicId)
+            var resultList = await Context.DoctorEmployments.Where(de => de.ClinicId == clinicId)
                 .Include(de => de.Doctor).Include(de => de.Clinic).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(
@@ -87,7 +87,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DoctorEmploymentDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.DoctorEmployments.AsNoTracking().IgnoreQueryFilters()
+            var resultList = await Context.DoctorEmployments.IgnoreQueryFilters()
                 .Where(de => de.IsDeleted).Include(de => de.Doctor).Include(de => de.Clinic).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DoctorEmploymentDto>>(

@@ -22,7 +22,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<TeamMemberDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.TeamMembers.AsNoTracking().Include(tm => tm.User).Include(tm => tm.Team)
+            var resultList = await Context.TeamMembers.Include(tm => tm.User).Include(tm => tm.Team)
                 .ToListAsync();
 
             return Mapper.Map<PagedListResponse<TeamMemberDto>>(
@@ -30,7 +30,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<TeamMemberDto> Get(int id)
         {
-            var result = await Context.TeamMembers.AsNoTracking().Include(tm => tm.User).Include(tm => tm.Team)
+            var result = await Context.TeamMembers.Include(tm => tm.User).Include(tm => tm.Team)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             return Mapper.Map<TeamMemberDto>(result);
@@ -59,7 +59,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<TeamMemberDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.TeamMembers.AsNoTracking().FirstOrDefaultAsync(tm => tm.Id == id);
+            var entity = await Context.TeamMembers.FirstOrDefaultAsync(tm => tm.Id == id);
 
             if (entity == null)
                 return null;
@@ -71,7 +71,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<TeamMemberDto>> GetByTeam(int teamId, PagedRequest request)
         {
-            var resultList = await Context.TeamMembers.AsNoTracking().Include(tm => tm.User).Include(tm => tm.Team)
+            var resultList = await Context.TeamMembers.Include(tm => tm.User).Include(tm => tm.Team)
                 .Where(tm => tm.TeamId == teamId).ToListAsync();
 
             return Mapper.Map<PagedListResponse<TeamMemberDto>>(
@@ -79,7 +79,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<TeamMemberDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.TeamMembers.AsNoTracking().IgnoreQueryFilters().Where(tm => tm.IsDeleted).Include(tm => tm.User).Include(tm => tm.Team)
+            var resultList = await Context.TeamMembers.IgnoreQueryFilters().Where(tm => tm.IsDeleted).Include(tm => tm.User).Include(tm => tm.Team)
                 .ToListAsync();
 
             return Mapper.Map<PagedListResponse<TeamMemberDto>>(

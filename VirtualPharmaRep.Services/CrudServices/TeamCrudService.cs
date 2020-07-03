@@ -22,7 +22,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<TeamDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.Teams.AsNoTracking().Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
+            var resultList = await Context.Teams.Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
                 .ToListAsync();
 
             return Mapper.Map<PagedListResponse<TeamDto>>(
@@ -30,7 +30,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<TeamDto> Get(int id)
         {
-            var result = await Context.Teams.AsNoTracking().Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
+            var result = await Context.Teams.Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             return Mapper.Map<TeamDto>(result);
@@ -59,7 +59,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<TeamDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.Teams.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id);
+            var entity = await Context.Teams.FirstOrDefaultAsync(t => t.Id == id);
 
             if (entity == null)
                 return null;
@@ -71,7 +71,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<TeamDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.Teams.AsNoTracking().IgnoreQueryFilters().Where(t => t.IsDeleted).Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
+            var resultList = await Context.Teams.IgnoreQueryFilters().Where(t => t.IsDeleted).Include(t => t.TeamMembers).ThenInclude(tm => tm.User)
                 .ToListAsync();
 
             return Mapper.Map<PagedListResponse<TeamDto>>(

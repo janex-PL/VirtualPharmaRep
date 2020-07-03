@@ -22,7 +22,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<VisitDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.Visits.AsNoTracking().Include(v => v.User).Include(v => v.DoctorEmployment)
+            var resultList = await Context.Visits.Include(v => v.User).Include(v => v.DoctorEmployment)
                 .ThenInclude(de => de.Clinic).Include(v => v.DoctorEmployment).ThenInclude(de => de.Doctor)
                 .Include(v => v.DrugReports).ToListAsync();
 
@@ -31,7 +31,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<VisitDto> Get(int id)
         {
-            var result = await Context.Visits.AsNoTracking().Include(v => v.User).Include(v => v.DoctorEmployment)
+            var result = await Context.Visits.Include(v => v.User).Include(v => v.DoctorEmployment)
                 .ThenInclude(de => de.Clinic).Include(v => v.DoctorEmployment).ThenInclude(de => de.Doctor)
                 .Include(v => v.DrugReports).FirstOrDefaultAsync(v => v.Id == id);
 
@@ -61,7 +61,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<VisitDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.Visits.AsNoTracking().FirstOrDefaultAsync(v => v.Id == id);
+            var entity = await Context.Visits.FirstOrDefaultAsync(v => v.Id == id);
 
             if (entity == null)
                 return null;
@@ -73,7 +73,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<VisitDto>> GetByEmployment(int employmentId, PagedRequest request)
         {
-            var resultList = await Context.Visits.AsNoTracking().Include(v => v.User).Include(v => v.DoctorEmployment)
+            var resultList = await Context.Visits.Include(v => v.User).Include(v => v.DoctorEmployment)
                 .ThenInclude(de => de.Clinic).Include(v => v.DoctorEmployment).ThenInclude(de => de.Doctor)
                 .Include(v => v.DrugReports).Where(v => v.DoctorEmploymentId == employmentId).ToListAsync();
 
@@ -82,7 +82,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<VisitDto>> GetByUser(string userId, PagedRequest request)
         {
-            var resultList = await Context.Visits.AsNoTracking().Include(v => v.User).Include(v => v.DoctorEmployment)
+            var resultList = await Context.Visits.Include(v => v.User).Include(v => v.DoctorEmployment)
                 .ThenInclude(de => de.Clinic).Include(v => v.DoctorEmployment).ThenInclude(de => de.Doctor)
                 .Include(v => v.DrugReports).Where(v => v.UserId == userId).ToListAsync();
 
@@ -91,7 +91,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<VisitDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.Visits.IgnoreQueryFilters().AsNoTracking().Where(v => v.IsDeleted).Include(v => v.User).Include(v => v.DoctorEmployment)
+            var resultList = await Context.Visits.IgnoreQueryFilters().Where(v => v.IsDeleted).Include(v => v.User).Include(v => v.DoctorEmployment)
                 .ThenInclude(de => de.Clinic).Include(v => v.DoctorEmployment).ThenInclude(de => de.Doctor)
                 .Include(v => v.DrugReports).ToListAsync();
 

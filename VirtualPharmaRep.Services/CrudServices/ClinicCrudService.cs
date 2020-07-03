@@ -22,16 +22,14 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<ClinicDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.Clinics.Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor)
-                .AsNoTracking().ToListAsync();
+            var resultList = await Context.Clinics.Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor).ToListAsync();
 
             return Mapper.Map<PagedListResponse<ClinicDto>>(
                 new PagedListResponse<Clinic>(resultList, request.PageSize, request.PageNumber));
         }
         public async Task<ClinicDto> Get(int id)
         {
-            var result = await Context.Clinics.Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor)
-                .AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            var result = await Context.Clinics.Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor).FirstOrDefaultAsync(c => c.Id == id);
 
             return Mapper.Map<ClinicDto>(result);
         }
@@ -59,7 +57,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<ClinicDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.Clinics.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+            var entity = await Context.Clinics.FirstOrDefaultAsync(c => c.Id == id);
 
             if (entity == null)
                 return null;
@@ -72,7 +70,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         public async Task<PagedListResponse<ClinicDto>> GetTrash(PagedRequest request)
         {
             var resultList = await Context.Clinics.IgnoreQueryFilters().Where(c => c.IsDeleted)
-                .Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor).AsNoTracking().ToListAsync();
+                .Include(c => c.DoctorEmployments).ThenInclude(de => de.Doctor).ToListAsync();
 
             return Mapper.Map<PagedListResponse<ClinicDto>>(
                 new PagedListResponse<Clinic>(resultList, request.PageSize, request.PageNumber));

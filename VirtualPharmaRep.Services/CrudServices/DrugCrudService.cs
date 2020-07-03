@@ -22,7 +22,8 @@ namespace VirtualPharmaRep.Services.CrudServices
         #region CRUD methods
         public async Task<PagedListResponse<DrugDto>> Get(PagedRequest request)
         {
-            var resultList = await Context.Drugs.AsNoTracking()
+            var resultList = await Context.Drugs
+
                 .Include(d => d.DrugCategory).Include(d => d.DrugProperties).Include(d => d.DrugReports).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugDto>>(new PagedListResponse<Drug>(resultList, request.PageSize,
@@ -30,7 +31,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DrugDto> Get(int id)
         {
-            var result = await Context.Drugs.AsNoTracking().Include(d => d.DrugCategory).Include(d => d.DrugProperties)
+            var result = await Context.Drugs.Include(d => d.DrugCategory).Include(d => d.DrugProperties)
                 .Include(d => d.DrugReports).FirstOrDefaultAsync(d => d.Id == id);
 
             return Mapper.Map<DrugDto>(result);
@@ -59,7 +60,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<DrugDto> Delete(int id, string requestAuthor)
         {
-            var entity = await Context.Drugs.AsNoTracking().FirstOrDefaultAsync(dc => dc.Id == id);
+            var entity = await Context.Drugs.FirstOrDefaultAsync(dc => dc.Id == id);
 
             if (entity == null)
                 return null;
@@ -71,7 +72,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DrugDto>> GetByCategory(int categoryId, PagedRequest request)
         {
-            var resultList = await Context.Drugs.Where(d => d.DrugCategoryId == categoryId).AsNoTracking()
+            var resultList = await Context.Drugs.Where(d => d.DrugCategoryId == categoryId)
                 .Include(d => d.DrugCategory).Include(d => d.DrugProperties).Include(d => d.DrugReports).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugDto>>(new PagedListResponse<Drug>(resultList, request.PageSize,
@@ -79,7 +80,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         }
         public async Task<PagedListResponse<DrugDto>> GetTrash(PagedRequest request)
         {
-            var resultList = await Context.Drugs.IgnoreQueryFilters().Where(d => d.IsDeleted).AsNoTracking()
+            var resultList = await Context.Drugs.IgnoreQueryFilters().Where(d => d.IsDeleted)
                 .Include(d => d.DrugCategory).Include(d => d.DrugProperties).Include(d => d.DrugReports).ToListAsync();
 
             return Mapper.Map<PagedListResponse<DrugDto>>(new PagedListResponse<Drug>(resultList, request.PageSize,

@@ -33,6 +33,9 @@ namespace VirtualPharmaRep.API.Swagger
                 case "Delete":
                     DeleteSummary.Apply(ref operation, resourceName);
                     break;
+                case "GetTrash":
+                    GetTrashSummary.Apply(ref operation, resourceName);
+                    break;
             }
             operation.Responses["403"] = new OpenApiResponse
             {

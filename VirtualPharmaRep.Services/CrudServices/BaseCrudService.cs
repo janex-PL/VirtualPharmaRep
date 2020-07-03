@@ -8,7 +8,7 @@ namespace VirtualPharmaRep.Services.CrudServices
         protected readonly ApplicationDbContext Context;
         protected readonly IMapper Mapper;
 
-        public BaseCrudService(IMapper mapper, ApplicationDbContext context)
+        protected BaseCrudService(IMapper mapper, ApplicationDbContext context)
         {
             Mapper = mapper;
             Context = context;

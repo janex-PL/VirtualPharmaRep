@@ -21,8 +21,6 @@ namespace VirtualPharmaRep.API.Configuration
             services.AddScoped<ITeamMemberCrudService, TeamMemberCrudService>();
             services.AddScoped<IVisitCrudService, VisitCrudService>();
             services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IPermissionResolverService, PermissionResolverService>();
-            services.AddScoped<IPermissionDetailCrudService, PermissionDetailCrudService>();
 
             return services;
         }

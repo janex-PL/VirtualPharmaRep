@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtualPharmaRep.API.Configuration;
 using VirtualPharmaRep.API.Filters;
 using VirtualPharmaRep.API.Middleware;
@@ -35,8 +36,7 @@ namespace VirtualPharmaRep.API
         {
             services.AddResponseCompression();
             services.AddControllers(config => config.Filters.Add(typeof(ExceptionFilter)))
-                .AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+                .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddCors();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
@@ -46,11 +46,7 @@ namespace VirtualPharmaRep.API
             });
             services.AddMemoryCache();
 
-            services.AddSwagger();
-
-            services.AddDatabase();
-
-            services.AddIdentity();
+            services.AddSwagger().AddDatabase().AddIdentity().AddEntityValidators().AddServices();
 
             services.AddAuthentication(opts =>
                 {
@@ -76,10 +72,6 @@ namespace VirtualPharmaRep.API
                         ValidateAudience = true
                     };
                 });
-
-            services.AddEntityValidators();
-
-            services.AddServices();
 
             services.AddAutoMapper(typeof(Startup));
         }

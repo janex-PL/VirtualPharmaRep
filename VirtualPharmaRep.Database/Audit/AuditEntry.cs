@@ -13,7 +13,7 @@ namespace VirtualPharmaRep.Database.Audit
             Entry = entry;
         }
 
-        public EntityEntry Entry { get; }
+        private EntityEntry Entry { get; }
         public string UserId { get; set; }
         public string TableName { get; set; }
         public Dictionary<string, object> KeyValues { get; } = new Dictionary<string, object>();

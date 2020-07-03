@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 
 namespace VirtualPharmaRep.API.Swagger.Actions
 {
-    public class GetBySummary
+    public static class GetBySummary
     {
         public static void Apply(ref OpenApiOperation operation, string resourceName, string actionName)
         {

@@ -18,7 +18,8 @@ namespace VirtualPharmaRep.API.Middleware
         {
             var watch = new Stopwatch();
             watch.Start();
-            context.Response.OnStarting(() => {
+            context.Response.OnStarting(() =>
+            {
                 watch.Stop();
                 var responseTimeForCompleteRequest = watch.ElapsedMilliseconds;
                 context.Response.Headers[ResponseHeaderResponseTime] = responseTimeForCompleteRequest.ToString();

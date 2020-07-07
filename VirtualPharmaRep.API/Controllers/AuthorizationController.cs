@@ -38,7 +38,7 @@ namespace VirtualPharmaRep.API.Controllers
                     return BadRequest();
             }
 
-            return response ?? (ActionResult<TokenResponseViewModel>)Unauthorized();
+            return response != null ? Ok(Response) : (ActionResult<TokenResponseViewModel>)Unauthorized();
         }
         #endregion
     }

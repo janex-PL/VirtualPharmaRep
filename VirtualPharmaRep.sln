@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPharmaRep.Services",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPharmaRep.Extensions", "VirtualPharmaRep.Extensions\VirtualPharmaRep.Extensions.csproj", "{7488A12C-3F72-49C7-BEBC-2EE6B93C0AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPharmaRep.API", "VirtualPharmaRep.API\VirtualPharmaRep.API.csproj", "{EAB3D8AF-B0C5-438F-AF30-F593AF26E0AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPharmaRep.API", "VirtualPharmaRep.API\VirtualPharmaRep.API.csproj", "{EAB3D8AF-B0C5-438F-AF30-F593AF26E0AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPharmaRep.Client", "VirtualPharmaRep.Client\VirtualPharmaRep.Client.csproj", "{19C95D1F-C47E-40DC-9F63-4EA0643C5F11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualPharmaRep.Client", "VirtualPharmaRep.Client\VirtualPharmaRep.Client.csproj", "{19C95D1F-C47E-40DC-9F63-4EA0643C5F11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualPharmaRep.Test", "VirtualPharmaRep.Test\VirtualPharmaRep.Test.csproj", "{06427D4A-6B82-40D9-B09A-77E7BFE4F80F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{19C95D1F-C47E-40DC-9F63-4EA0643C5F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19C95D1F-C47E-40DC-9F63-4EA0643C5F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19C95D1F-C47E-40DC-9F63-4EA0643C5F11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06427D4A-6B82-40D9-B09A-77E7BFE4F80F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06427D4A-6B82-40D9-B09A-77E7BFE4F80F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06427D4A-6B82-40D9-B09A-77E7BFE4F80F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06427D4A-6B82-40D9-B09A-77E7BFE4F80F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

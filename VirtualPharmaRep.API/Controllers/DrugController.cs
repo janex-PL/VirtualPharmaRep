@@ -33,9 +33,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.Get(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<DrugDto>> Get(int id)
@@ -45,7 +45,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(new MessageResponse { Message = "Requested resource could not be found" }),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpPost]
@@ -67,7 +67,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpDelete("{id}")]
@@ -78,7 +78,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpGet("trash")]
@@ -86,16 +86,18 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.GetTrash(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("bycategory/{categoryId}")]
         public async Task<ActionResult<IList<DrugDto>>> GetByCategory(int categoryId, [FromQuery] PagedRequest request)
         {
             var response = await _crudService.GetByCategory(categoryId, request);
-            Response.Headers.AddPaginationHeaders(response);
-            return Ok(response.Result);
+
+            Response?.Headers.AddPaginationHeaders(response);
+
+            return response.Result;
         }
         #endregion
     }

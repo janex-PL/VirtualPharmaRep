@@ -34,9 +34,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.Get(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<DrugPropertyReportDto>> Get(int id)
@@ -46,7 +46,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(new MessageResponse { Message = "Requested resource could not be found" }),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpPost]
@@ -68,7 +68,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpDelete("{id}")]
@@ -79,7 +79,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpGet("trash")]
@@ -87,27 +87,27 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.GetTrash(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("byproperty/{propertyId}")]
         public async Task<ActionResult<IEnumerable<DrugPropertyReportDto>>> GetByProperty([FromRoute] int propertyId, [FromQuery] PagedRequest request)
         {
             var response = await _crudService.GetByProperty(propertyId, request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("bydrugreport/{drugReportId}")]
         public async Task<ActionResult<IEnumerable<DrugPropertyReportDto>>> GetBy([FromRoute] int drugReportId, [FromQuery] PagedRequest request)
         {
             var response = await _crudService.GetByDrugReport(drugReportId, request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         #endregion
     }

@@ -32,9 +32,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.Get(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<VisitDto>> Get(int id)
@@ -44,7 +44,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(new MessageResponse { Message = "Requested resource could not be found" }),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpPost]
@@ -66,7 +66,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpDelete("{id}")]
@@ -77,7 +77,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpGet("trash")]
@@ -87,25 +87,25 @@ namespace VirtualPharmaRep.API.Controllers
 
             Response.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("byemployment/{employmentId}")]
         public async Task<ActionResult<IList<VisitDto>>> GetByEmployment(int employmentId, [FromQuery] PagedRequest request)
         {
             var response = await _crudService.GetByEmployment(employmentId, request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("byuser/{userId}")]
         public async Task<ActionResult<IList<VisitDto>>> GetByClinic(string userId, [FromQuery] PagedRequest request)
         {
             var response = await _crudService.GetByUser(userId, request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         #endregion
     }

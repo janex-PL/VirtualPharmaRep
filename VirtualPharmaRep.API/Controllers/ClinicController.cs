@@ -33,9 +33,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.Get(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ClinicDto>> Get(int id)
@@ -45,14 +45,14 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(new MessageResponse { Message = "Requested resource could not be found" }),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpPost]
         [ValidateModel]
         public async Task<ActionResult<ClinicDto>> Post([FromBody] ClinicViewModel model)
         {
-            var result = await _crudService.Add(model, User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _crudService.Add(model, User?.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             return result switch
             {
                 null => Conflict(),
@@ -67,7 +67,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
 
@@ -79,7 +79,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
 
@@ -90,7 +90,7 @@ namespace VirtualPharmaRep.API.Controllers
 
             Response.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         #endregion
     }

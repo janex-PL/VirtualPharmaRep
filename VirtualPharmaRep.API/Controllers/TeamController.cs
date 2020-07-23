@@ -33,9 +33,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.Get(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<TeamDto>> Get(int id)
@@ -45,7 +45,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(new MessageResponse { Message = "Requested resource could not be found" }),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpPost]
@@ -78,7 +78,7 @@ namespace VirtualPharmaRep.API.Controllers
             return result switch
             {
                 null => NotFound(),
-                _ => Ok(result)
+                _ => result
             };
         }
         [HttpGet("trash")]
@@ -86,9 +86,9 @@ namespace VirtualPharmaRep.API.Controllers
         {
             var response = await _crudService.GetTrash(request);
 
-            Response.Headers.AddPaginationHeaders(response);
+            Response?.Headers.AddPaginationHeaders(response);
 
-            return Ok(response.Result);
+            return response.Result;
         }
         #endregion
     }
